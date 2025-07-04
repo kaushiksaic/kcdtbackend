@@ -96,7 +96,7 @@ japaRouter.get('/japa/overview',userAuth,async (req,res) => {
 
 
         const overviewResult = await pool.query(
-            `select u.userid,u.mobilenum,u.name,u.city,u.pinnum,j.count from 
+            `select u.userid,u.mobilenum,u.name,u.city,u.pinnum,j.count,j.tarpanam_count from 
     usermaster u,japa_counts j where u.userid=j.userid order by j.count desc
     `
         );
@@ -108,11 +108,16 @@ japaRouter.get('/japa/overview',userAuth,async (req,res) => {
       const sumResult = await pool.query(
         `select sum(count) AS sum_count from japa_counts`
       );
+
+      const tarResult = await pool.query(
+        `select sum(tarpanam_count) AS tarpanam_sum from japa_counts`
+      )
     
     
       return res.status(200).json({
         overview: overviewResult.rows,
-        sum: sumResult.rows[0].sum_count
+        sum: sumResult.rows[0].sum_count,
+        tarpanam_sum: tarResult.rows[0].tarpanam_sum
       });
      
     
